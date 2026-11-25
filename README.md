@@ -65,4 +65,4 @@ Google Gemini (2026) 3. 데이터 과학 교과서 해당 평가 단원
 code/main.py 실행. 필요한 라이브러리는 requirements.txt.
 
 ## 배포(선택)
-스트림릿 주소:
+스트림릿 주소: https://stproject-anfbvbkoz6cw6bbimmmzn7.streamlit.app/
