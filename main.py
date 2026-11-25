@@ -28,7 +28,60 @@ except ImportError:
     else:
         plt.rcParams["font.family"] = "NanumGothic"
 plt.rcParams["axes.unicode_minus"] = False
+import os
+import platform
+import urllib.request
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+import seaborn as sns
+import streamlit as st
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+from sklearn.model_selection import train_test_split
 
+# ---------------------------------------------------------
+# 1. 페이지 설정 및 한글 폰트 환경 100% 강제 등록
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title="서울시 심야 교통사고 요인 분석 (20920·20922)",
+    page_icon="🚦",
+    layout="wide",
+)
+
+sns.set_style("whitegrid")
+
+
+@st.cache_resource
+def load_korean_font() -> str:
+    """실행 환경(Windows / Mac / Streamlit Cloud 리눅스)에 맞는 한글 폰트 확보 및 등록"""
+    system_name = platform.system()
+    if system_name == "Windows":
+        return "Malgun Gothic"
+    if system_name == "Darwin":
+        return "AppleGothic"
+
+    # 리눅스(Streamlit Cloud): 시스템 폰트 확인 후 없으면 자동 다운로드
+    font_candidates = [
+        "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",
+        "/usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf",
+        "/tmp/NanumGothic.ttf",
+    ]
+    font_path = next((p for p in font_candidates if os.path.exists(p)), None)
+
+    if font_path is None:
+        font_path = "/tmp/NanumGothic.ttf"
+        url = "https://github.com/google/fonts/raw/main/ofl/nanumgothic/NanumGothic-Regular.ttf"
+        urllib.request.urlretrieve(url, font_path)
+
+    fm.fontManager.addfont(font_path)
+    return fm.FontProperties(fname=font_path).get_name()
+
+
+FONT_NAME = load_korean_font()
+plt.rcParams["font.family"] = FONT_NAME
+plt.rcParams["axes.unicode_minus"] = False
 
 # ---------------------------------------------------------
 # 2. 데이터 로드 함수 (기본 25개 자치구 통합 데이터 + CSV 업로드 지원)
