@@ -1,0 +1,3 @@
+git add 파일이름.csv
+git commit -m "Add csv file"
+git push origin main
